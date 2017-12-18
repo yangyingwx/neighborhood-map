@@ -39,25 +39,25 @@ var myViewModel = function () {
 	self.currentMapList = ko.computed(function () {
 		return ko.utils.arrayFilter(self.mapList(), function (el, index) {
 			var result = el.name.indexOf(self.userInput()) > -1;
-			if (result) {markers[index].show();} else {markers[index].hide();}
+			result ? markers[index].show() : markers[index].hide();
 			return result;
 		});
 	});		
-	
+	//点击侧边栏li，弹出infowindow
 	self.openInfo = function(e) {
-   //构建信息窗体中显示的内容   
+    //构建信息窗体中显示的内容    	
     	info = [] 	
-		info.push(e.name);
+		info.push(e.name);	
 		info.push('经纬度：' + e.location);
     	creatInfo();
     	//console.log(e);
     	infowindow.open(map, e.location);
-    	//弹跳
-    	console.log(e.id);
+    	//弹跳    
     	bounce(markers[e.id]);
 	}
 }
 var info;
+//点击marker，弹出infowindow
 function markerClick(e){  
 	info = []
 	bounce(e.target);
@@ -66,21 +66,24 @@ function markerClick(e){
 	creatInfo();
     infowindow.open(map, e.target.getPosition());
 }
+//创建infowindow
 function creatInfo() {	
 	infowindow = new AMap.InfoWindow({
        content: info.join("<br>")  
    });
 }	
+//marke设置动画
 function bounce(marker) {
 	marker.setAnimation('AMAP_ANIMATION_BOUNCE');
 	setTimeout(function() {
 		marker.setAnimation('AMAP_ANIMATION_NONE');
 	},2400);	
 }
+//绑定VM
 ko.applyBindings(myViewModel);
 
 
-//切换样式
+//切换样式,展示或隐藏侧边栏
 $('#menu img').click(function(event) {
 	$('aside').toggleClass('hide-aside');
 	$('section').toggleClass('extend-map');

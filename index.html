@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no"> 
 	<title>Neighborhood Map</title>
-	<link rel="stylesheet" type="text/css" href="css/map.css" />
+	<link rel="stylesheet" href="css/map.css">
 </head>
 <body>
 	<div id="container">
@@ -25,7 +25,8 @@
 			<div id="map"></div>
 		</section>
 	</div>
-	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.2&key=2385246bba4af1a0fa2f8fd3d8f555ff"></script>
+	<script async src="js/map.js"></script>
+	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.2&key=2385246bba4af1a0fa2f8fd3d8f555ff" onerror="mapErrorHandler()"></script>
 	<script async src="js/knockout-3.4.2.js"></script>
 	<script async src="js/locations.js"></script>
     <script async src="js/jquery-3.1.1.js"></script> 
