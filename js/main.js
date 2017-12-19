@@ -24,6 +24,7 @@ var myViewModel = function () {
 			var marker = new AMap.Marker({
 				position: item.location,
 				title: item.name,
+				extData: item.id,
 				map: map
     		});	
     		marker.on('click', markerClick);
@@ -45,11 +46,12 @@ var myViewModel = function () {
 	});		
 	//点击侧边栏li，弹出infowindow
 	self.openInfo = function(e) {
-    //构建信息窗体中显示的内容    	
-    	info = [] 	
+    //构建信息窗体中显示的内容
+    	info = [];
 		info.push(e.name);	
 		info.push('经纬度：' + e.location);
-    	creatInfo();
+    		
+    	creatInfo(e.en_name);
     	//console.log(e);
     	infowindow.open(map, e.location);
     	//弹跳    
@@ -61,13 +63,32 @@ var info;
 function markerClick(e){  
 	info = []
 	bounce(e.target);
+	var index = e.target.getExtData();
 	info.push(e.target.getTitle());
 	info.push('经纬度：' + e.target.getPosition());
-	creatInfo();
+	creatInfo(initialList[index].en_name);
     infowindow.open(map, e.target.getPosition());
 }
 //创建infowindow
-function creatInfo() {	
+function creatInfo(str) {	
+	var wikiUrl = "http://en.wikipedia.org/w/api.php?action=opensearch&search=" 
+                + str + "&format=json&callback=wikiCallback";    
+        console.log(wikiUrl);	
+        //info里面加上维基百科的链接
+        $.ajax({
+    		url: wikiUrl,
+    		dataType: "jsonp",
+    		success: function(response) {
+        		var articlelist = response[3];
+            	for (var i = 0; i < articlelist.length; i++) {  
+                	info.push('维基相关链接' + articlelist[i]);
+                	console.log(info);
+            	}
+    		},
+    		error: function(error) {
+      			console.log("wikipedia has failed to loaded");
+    		}
+  		});    
 	infowindow = new AMap.InfoWindow({
        content: info.join("<br>")  
    });
